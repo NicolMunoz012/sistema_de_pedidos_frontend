@@ -7,7 +7,7 @@ import { authService } from '@/lib/services/authService';
 interface AuthContextType {
   usuario: Usuario | null;
   loading: boolean;
-  login: (gmail: string, contraseña: string) => Promise<void>;
+  login: (gmail: string, contraseña: string) => Promise<Usuario>;
   registro: (usuarioData: Usuario) => Promise<void>;
   logout: () => void;
   updateUsuario: (usuarioData: Partial<Usuario>) => Promise<void>;
@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const usuarioData = await authService.login(gmail, contraseña);
       setUsuario(usuarioData);
       localStorage.setItem('usuario', JSON.stringify(usuarioData));
+      return usuarioData;
     } catch (error) {
       console.error('[v0] Error en login:', error);
       throw error;

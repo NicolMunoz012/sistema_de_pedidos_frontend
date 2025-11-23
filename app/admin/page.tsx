@@ -4,15 +4,19 @@ import { useState } from 'react';
 import { GestionPedidosAdmin } from '@/components/admin/GestionPedidosAdmin';
 import { AdministrarMenu } from '@/components/admin/AdministrarMenu';
 import { GestionFacturasAdmin } from '@/components/admin/GestionFacturasAdmin';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Link from 'next/link';
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'pedidos' | 'menu' | 'facturas'>('pedidos');
+  const { usuario } = useAuth();
+  const [activeTab, setActiveTab] = useState<'pedidos' | 'menu' | 'facturas'>('menu');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+    <ProtectedRoute requireAdmin={true}>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
       {/* Navbar */}
       <nav className="sticky top-0 bg-white/95 backdrop-blur-md shadow-lg z-40 border-b border-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,7 +27,9 @@ export default function AdminPage() {
                 <h1 className="font-serif text-3xl font-bold text-primary">
                   Panel Admin
                 </h1>
-                <p className="text-xs text-muted-foreground">Gestión del restaurante</p>
+                <p className="text-xs text-muted-foreground">
+                  Bienvenido, {usuario?.nombre}
+                </p>
               </div>
             </div>
             
@@ -70,5 +76,6 @@ export default function AdminPage() {
         {activeTab === 'facturas' && <GestionFacturasAdmin />}
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

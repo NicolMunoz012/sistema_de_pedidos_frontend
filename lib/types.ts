@@ -7,7 +7,7 @@ export interface Usuario {
   gmail: string;
   contraseña: string;
   direccion: string;
-  rol?: 'CLIENTE' | 'ADMINISTRADOR';
+  rol?: 'CLIENTE' | 'ADMIN';
 }
 
 export interface Item {
@@ -17,6 +17,7 @@ export interface Item {
   descripcion: string;
   precio: number;
   disponibilidad: boolean;
+  imagen?: string;
 }
 
 export interface DetallePedido {

@@ -36,7 +36,8 @@ export function AdministrarMenu() {
     categoria: Categoria.PLATO_PRINCIPAL,
     descripcion: '',
     precio: 0,
-    disponibilidad: true
+    disponibilidad: true,
+    imagen: ''
   });
 
   useEffect(() => {
@@ -68,7 +69,8 @@ export function AdministrarMenu() {
         categoria: Categoria.PLATO_PRINCIPAL,
         descripcion: '',
         precio: 0,
-        disponibilidad: true
+        disponibilidad: true,
+        imagen: ''
       });
     }
     setIsDialogOpen(true);
@@ -202,6 +204,19 @@ export function AdministrarMenu() {
                     onChange={(e) => setFormData({ ...formData, precio: parseFloat(e.target.value) })}
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">URL de Imagen (opcional)</label>
+                  <Input
+                    type="text"
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                    value={formData.imagen || ''}
+                    onChange={(e) => setFormData({ ...formData, imagen: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Si no se proporciona, se usará una imagen por defecto
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">

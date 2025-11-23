@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { itemService } from '@/lib/services/itemService';
 import { Item, Categoria } from '@/lib/types';
+import { ItemImage } from '@/components/common/ItemImage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -220,10 +221,10 @@ export default function HomePage() {
                     style={{animationDelay: `${index * 0.05}s`}}
                   >
                     <div className="relative h-48 overflow-hidden bg-gradient-to-br from-orange-100 to-amber-100">
-                      <img 
-                        src="/placeholder.jpg"
+                      <ItemImage
+                        src={item.imagen}
                         alt={item.nombre}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="group-hover:scale-110 transition-transform duration-500"
                       />
                       <Badge className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 text-sm font-semibold shadow-lg">
                         ${item.precio.toFixed(2)}

@@ -48,9 +48,14 @@ export function LoginContent() {
     setLoading(true);
 
     try {
-      await login(gmail, contraseña);
-      // Redirigir al menú después del login exitoso
-      router.push('/menu');
+      const usuarioLogueado = await login(gmail, contraseña);
+      
+      // Redirigir según el rol del usuario
+      if (usuarioLogueado?.rol === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/menu');
+      }
     } catch (err: any) {
       console.error('Error en login:', err);
       
