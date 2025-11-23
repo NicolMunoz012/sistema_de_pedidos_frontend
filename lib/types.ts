@@ -3,9 +3,11 @@ import { Categoria, Estado } from './constants';
 export interface Usuario {
   idUsuario?: string;
   nombre: string;
+  apellido?: string;
   gmail: string;
   contraseña: string;
   direccion: string;
+  rol?: 'CLIENTE' | 'ADMINISTRADOR';
 }
 
 export interface Item {
