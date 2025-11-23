@@ -43,9 +43,9 @@ export const itemService = {
     await api.delete(`/items/${idItem}`);
   },
 
-  // Cambiar disponibilidad (admin) - ENDPOINT REAL: PUT /items/{idItem}/disponibilidad?disponible=true/false
+  // Cambiar disponibilidad (admin) - ENDPOINT REAL: PATCH /items/{idItem}/disponibilidad
   toggleDisponibilidad: async (idItem: string, disponible: boolean): Promise<Item> => {
-    const response = await api.put(`/items/${idItem}/disponibilidad?disponible=${disponible}`);
+    const response = await api.patch(`/items/${idItem}/disponibilidad`, { disponible });
     return response.data;
   }
 };

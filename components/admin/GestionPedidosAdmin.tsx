@@ -15,7 +15,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-export function GestionPedidosAdmin() {
+interface GestionPedidosAdminProps {
+  mostrarHistorial?: boolean;
+}
+
+export function GestionPedidosAdmin({ mostrarHistorial = false }: GestionPedidosAdminProps) {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [filtro, setFiltro] = useState<string>('TODOS');
   const [loading, setLoading] = useState(true);
@@ -24,15 +28,19 @@ export function GestionPedidosAdmin() {
 
   useEffect(() => {
     loadPedidos();
-  }, [filtro]);
+  }, [filtro, mostrarHistorial]);
 
   const loadPedidos = async () => {
     try {
       setLoading(true);
       let data: Pedido[];
       
-      if (filtro === 'TODOS') {
-        data = await pedidoService.getAllPedidos();
+      if (mostrarHistorial) {
+        // Cargar historial (pedidos completados y cancelados)
+        data = await pedidoService.getHistorialPedidos();
+      } else if (filtro === 'TODOS') {
+        // Cargar pedidos activos
+        data = await pedidoService.getPedidosActivos();
       } else {
         data = await pedidoService.getPedidosByEstado(filtro as Estado);
       }

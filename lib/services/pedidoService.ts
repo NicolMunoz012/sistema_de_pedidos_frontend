@@ -20,6 +20,18 @@ export const pedidoService = {
     return response.data;
   },
 
+  // Pedidos activos (admin) - ENDPOINT: GET /api/pedidos/activos
+  getPedidosActivos: async (): Promise<Pedido[]> => {
+    const response = await api.get('/pedidos/activos');
+    return response.data;
+  },
+
+  // Historial de pedidos (admin) - ENDPOINT: GET /api/pedidos/historial
+  getHistorialPedidos: async (): Promise<Pedido[]> => {
+    const response = await api.get('/pedidos/historial');
+    return response.data;
+  },
+
   // Pedidos por usuario - ENDPOINT REAL: GET /api/pedidos/por-usuario/{idUsuario}
   getPedidosByUsuario: async (idUsuario: string): Promise<Pedido[]> => {
     const response = await api.get(`/pedidos/por-usuario/${idUsuario}`);
@@ -38,9 +50,9 @@ export const pedidoService = {
     return response.data;
   },
 
-  // Cambiar estado (admin) - ENDPOINT REAL: PUT /api/pedidos/{codigoPedido}/estado?nuevoEstado=X
+  // Cambiar estado (admin) - ENDPOINT REAL: PATCH /api/pedidos/{codigoPedido}/estado
   updateEstado: async (codigoPedido: number, nuevoEstado: Estado): Promise<Pedido> => {
-    const response = await api.put(`/pedidos/${codigoPedido}/estado?nuevoEstado=${nuevoEstado}`);
+    const response = await api.patch(`/pedidos/${codigoPedido}/estado`, { estado: nuevoEstado });
     return response.data;
   },
 
