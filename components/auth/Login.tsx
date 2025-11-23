@@ -25,7 +25,8 @@ export function Login() {
       await login(gmail, contraseña);
       router.push('/menu');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+      console.error('Error en login:', err);
+      setError(err.response?.data?.message || err.message || 'Error al iniciar sesión. Verifica tus credenciales.');
     } finally {
       setLoading(false);
     }

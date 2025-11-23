@@ -83,8 +83,8 @@ export function AdministrarMenu() {
     e.preventDefault();
     
     try {
-      if (editingItem) {
-        await itemService.updateItem(editingItem.nombre, formData);
+      if (editingItem && editingItem.idItem) {
+        await itemService.updateItem(editingItem.idItem, formData);
       } else {
         await itemService.createItem(formData);
       }
@@ -92,29 +92,29 @@ export function AdministrarMenu() {
       handleCloseDialog();
       loadItems();
     } catch (err: any) {
-      console.error('[v0] Error guardando item:', err);
+      console.error('Error guardando item:', err);
       alert(err.response?.data?.message || 'Error al guardar el item');
     }
   };
 
-  const handleToggleDisponibilidad = async (nombre: string, disponibilidad: boolean) => {
+  const handleToggleDisponibilidad = async (idItem: string, disponibilidad: boolean) => {
     try {
-      await itemService.toggleDisponibilidad(nombre, !disponibilidad);
+      await itemService.toggleDisponibilidad(idItem, !disponibilidad);
       loadItems();
     } catch (err) {
-      console.error('[v0] Error actualizando disponibilidad:', err);
+      console.error('Error actualizando disponibilidad:', err);
       alert('Error al actualizar la disponibilidad');
     }
   };
 
-  const handleDelete = async (nombre: string) => {
+  const handleDelete = async (idItem: string, nombre: string) => {
     if (!confirm(`¿Estás seguro de eliminar ${nombre}?`)) return;
 
     try {
-      await itemService.deleteItem(nombre);
+      await itemService.deleteItem(idItem);
       loadItems();
     } catch (err) {
-      console.error('[v0] Error eliminando item:', err);
+      console.error('Error eliminando item:', err);
       alert('Error al eliminar el item');
     }
   };
@@ -240,7 +240,7 @@ export function AdministrarMenu() {
       {/* Lista de Items */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {items.map((item) => (
-          <Card key={item.nombre} className="p-6 bg-white border-2 border-orange-100">
+          <Card key={item.idItem || item.nombre} className="p-6 bg-white border-2 border-orange-100">
             <div className="flex justify-between items-start mb-3">
               <h4 className="font-serif text-xl font-bold text-foreground">
                 {item.nombre}
@@ -270,22 +270,25 @@ export function AdministrarMenu() {
                 size="sm"
                 onClick={() => handleOpenDialog(item)}
                 className="flex-1"
+                disabled={!item.idItem}
               >
                 Editar
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleToggleDisponibilidad(item.nombre, item.disponibilidad)}
+                onClick={() => item.idItem && handleToggleDisponibilidad(item.idItem, item.disponibilidad)}
                 className="flex-1"
+                disabled={!item.idItem}
               >
                 {item.disponibilidad ? 'Desactivar' : 'Activar'}
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleDelete(item.nombre)}
+                onClick={() => item.idItem && handleDelete(item.idItem, item.nombre)}
                 className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                disabled={!item.idItem}
               >
                 Eliminar
               </Button>

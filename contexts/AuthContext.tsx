@@ -63,7 +63,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (usuario?.idUsuario) {
+      try {
+        await authService.logout(usuario.idUsuario);
+      } catch (error) {
+        console.error('[v0] Error en logout:', error);
+      }
+    }
     setUsuario(null);
     localStorage.removeItem('usuario');
     localStorage.removeItem('token');

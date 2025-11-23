@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { GestionPedidosAdmin } from '@/components/admin/GestionPedidosAdmin';
 import { AdministrarMenu } from '@/components/admin/AdministrarMenu';
+import { GestionFacturasAdmin } from '@/components/admin/GestionFacturasAdmin';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Link from 'next/link';
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'pedidos' | 'menu'>('pedidos');
+  const [activeTab, setActiveTab] = useState<'pedidos' | 'menu' | 'facturas'>('pedidos');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
@@ -54,11 +55,19 @@ export default function AdminPage() {
           >
             Administrar Menú
           </Button>
+          <Button
+            variant={activeTab === 'facturas' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('facturas')}
+            className={activeTab === 'facturas' ? 'bg-primary text-primary-foreground' : ''}
+          >
+            Gestión de Facturas
+          </Button>
         </Card>
 
         {/* Content */}
         {activeTab === 'pedidos' && <GestionPedidosAdmin />}
         {activeTab === 'menu' && <AdministrarMenu />}
+        {activeTab === 'facturas' && <GestionFacturasAdmin />}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ export interface Usuario {
 }
 
 export interface Item {
+  idItem?: string;
   nombre: string;
   categoria: Categoria;
   descripcion: string;
@@ -32,6 +33,7 @@ export interface Pedido {
   fecha: Date;
   estado: Estado;
   detalles: DetallePedido[];
+  total?: number;
 }
 
 export interface Factura {

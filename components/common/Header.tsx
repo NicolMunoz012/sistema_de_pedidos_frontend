@@ -34,9 +34,15 @@ export function Header({ cartItemCount = 0 }: HeaderProps) {
                   </Button>
                 </Link>
                 
-                <Link href="/historial">
+                <Link href="/mis-pedidos">
                   <Button variant="ghost">
                     Mis Pedidos
+                  </Button>
+                </Link>
+                
+                <Link href="/mis-facturas">
+                  <Button variant="ghost">
+                    Mis Facturas
                   </Button>
                 </Link>
                 

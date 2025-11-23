@@ -8,15 +8,21 @@ export const authService = {
     return response.data;
   },
 
-  // Iniciar sesión
+  // Iniciar sesión - ENDPOINT REAL: POST /login?gmail=x&contraseña=x
   login: async (gmail: string, contraseña: string) => {
-    const response = await api.post('/usuarios/login', { gmail, contraseña });
+    const response = await api.post(`/usuarios/login?gmail=${encodeURIComponent(gmail)}&contraseña=${encodeURIComponent(contraseña)}`);
     return response.data;
   },
 
-  // Recuperar contraseña
+  // Recuperar contraseña - ENDPOINT REAL: POST /recuperar?gmail=x
   recuperar: async (gmail: string) => {
-    const response = await api.post('/usuarios/recuperar', { gmail });
+    const response = await api.post(`/usuarios/recuperar?gmail=${encodeURIComponent(gmail)}`);
+    return response.data;
+  },
+
+  // Cerrar sesión - ENDPOINT REAL: POST /logout/{idUsuario}
+  logout: async (idUsuario: string) => {
+    const response = await api.post(`/usuarios/logout/${idUsuario}`);
     return response.data;
   },
 
@@ -27,19 +33,16 @@ export const authService = {
   },
 
   // Actualizar usuario
-  updateUsuario: async (id: string, usuarioData: Partial<Usuario>) => {
+  updateUsuario: async (id: string, usuarioData: Usuario) => {
     const response = await api.put(`/usuarios/${id}`, usuarioData);
     return response.data;
   },
 
-  // Actualizar dirección
-  updateDireccion: async (id: string, direccion: string) => {
-    const response = await api.put(`/usuarios/${id}/direccion`, { direccion });
+  // Cambiar contraseña - ENDPOINT REAL: PUT /{idUsuario}/cambiar-contraseña?contraseñaAntigua=X&contraseñaNueva=Y
+  cambiarContraseña: async (idUsuario: string, contraseñaAntigua: string, contraseñaNueva: string) => {
+    const response = await api.put(
+      `/usuarios/${idUsuario}/cambiar-contraseña?contraseñaAntigua=${encodeURIComponent(contraseñaAntigua)}&contraseñaNueva=${encodeURIComponent(contraseñaNueva)}`
+    );
     return response.data;
-  },
-
-  // Cerrar sesión / eliminar
-  deleteUsuario: async (id: string) => {
-    await api.delete(`/usuarios/${id}`);
   }
 };

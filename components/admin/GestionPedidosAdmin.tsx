@@ -37,10 +37,22 @@ export function GestionPedidosAdmin() {
         data = await pedidoService.getPedidosByEstado(filtro as Estado);
       }
       
-      setPedidos(data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()));
+      // Cargar el total de cada pedido
+      const pedidosConTotal = await Promise.all(
+        data.map(async (pedido) => {
+          try {
+            const total = await pedidoService.calcularTotal(pedido.codigoPedido!);
+            return { ...pedido, total };
+          } catch {
+            return pedido;
+          }
+        })
+      );
+      
+      setPedidos(pedidosConTotal.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()));
       setError('');
     } catch (err) {
-      console.error('[v0] Error cargando pedidos:', err);
+      console.error('Error cargando pedidos:', err);
       setError('Error al cargar los pedidos');
     } finally {
       setLoading(false);
@@ -59,7 +71,7 @@ export function GestionPedidosAdmin() {
           : p
       ));
     } catch (err) {
-      console.error('[v0] Error actualizando estado:', err);
+      console.error('Error actualizando estado:', err);
       alert('Error al actualizar el estado del pedido');
     } finally {
       setUpdatingPedido(null);
@@ -110,7 +122,7 @@ export function GestionPedidosAdmin() {
           </Card>
         ) : (
           pedidos.map((pedido) => {
-            const total = pedido.detalles.reduce((sum, d) => sum + d.subtotal, 0);
+            const total = pedido.total || pedido.detalles.reduce((sum, d) => sum + d.subtotal, 0);
             const fecha = new Date(pedido.fecha).toLocaleDateString('es-ES', {
               year: 'numeric',
               month: 'short',
