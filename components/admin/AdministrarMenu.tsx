@@ -40,6 +40,9 @@ export function AdministrarMenu() {
     imagen: ''
   });
 
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+
   useEffect(() => {
     loadItems();
   }, []);
@@ -62,6 +65,8 @@ export function AdministrarMenu() {
     if (item) {
       setEditingItem(item);
       setFormData(item);
+      setSelectedImage(null);
+      setImagePreview(item.imagen || '');
     } else {
       setEditingItem(null);
       setFormData({
@@ -72,6 +77,8 @@ export function AdministrarMenu() {
         disponibilidad: true,
         imagen: ''
       });
+      setSelectedImage(null);
+      setImagePreview('');
     }
     setIsDialogOpen(true);
   };
@@ -79,18 +86,46 @@ export function AdministrarMenu() {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setEditingItem(null);
+    setSelectedImage(null);
+    setImagePreview('');
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validar tamaño de archivo (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Máximo 5MB.');
+        return;
+      }
+
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido.');
+        return;
+      }
+
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setImagePreview(result);
+        setFormData({ ...formData, imagen: result });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (editingItem && editingItem.idItem) {
         await itemService.updateItem(editingItem.idItem, formData);
       } else {
         await itemService.createItem(formData);
       }
-      
+
       handleCloseDialog();
       loadItems();
     } catch (err: any) {
@@ -207,16 +242,33 @@ export function AdministrarMenu() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">URL de Imagen (opcional)</label>
-                  <Input
-                    type="text"
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                    value={formData.imagen || ''}
-                    onChange={(e) => setFormData({ ...formData, imagen: e.target.value })}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Si no se proporciona, se usará una imagen por defecto
-                  </p>
+                  <label className="block text-sm font-medium mb-2">Imagen del Producto</label>
+                  <div className="space-y-3">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                    />
+                    {imagePreview && (
+                      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-16 h-16 object-cover rounded-lg border"
+                        />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Imagen seleccionada</p>
+                          <p className="text-xs text-muted-foreground">
+                            {selectedImage ? `${selectedImage.name} (${(selectedImage.size / 1024).toFixed(1)} KB)` : 'Imagen existente'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Selecciona una imagen para el producto. Si no se proporciona, se usará una imagen por defecto.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2">
