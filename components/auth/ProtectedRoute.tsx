@@ -19,7 +19,7 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
       if (!usuario) {
         // No hay usuario logueado, redirigir al login
         router.push('/login');
-      } else if (requireAdmin && usuario.rol !== 'ADMINISTRADOR') {
+      } else if (requireAdmin && usuario.rol !== 'ADMIN') {
         // Requiere admin pero el usuario no lo es
         router.push('/menu');
       }
@@ -38,7 +38,7 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
     return null;
   }
 
-  if (requireAdmin && usuario.rol !== 'ADMINISTRADOR') {
+  if (requireAdmin && usuario.rol !== 'ADMIN') {
     return null;
   }
 

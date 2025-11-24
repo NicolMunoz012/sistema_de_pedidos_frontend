@@ -22,8 +22,13 @@ export function Login() {
     setLoading(true);
 
     try {
-      await login(gmail, contraseña);
-      router.push('/menu');
+      const usuarioData = await login(gmail, contraseña);
+      // Redirigir basado en el rol
+      if (usuarioData.rol === 'ADMIN') {
+        router.push('/admin');
+      } else {
+        router.push('/menu');
+      }
     } catch (err: any) {
       console.error('Error en login:', err);
       setError(err.response?.data?.message || err.message || 'Error al iniciar sesión. Verifica tus credenciales.');
